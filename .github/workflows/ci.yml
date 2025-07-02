@@ -19,16 +19,16 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker Image
-        run: docker build -t coders-treasure/flask-ci-demo .
+        run: docker build -t uha26/ci-cd-demo-app .
 
       - name: Run Container and Test Port
         run: |
-          docker run -d -p 5000:5000 --name test-container coders-treasure/flask-ci-demo
+          docker run -d -p 5000:5000 --name test-container uha26/ci-cd-demo-app
           sleep 5
           curl --fail http://localhost:5000
 
       - name: Push Docker Image to Docker Hub
-        run: docker push coders-treasure/flask-ci-demo
+        run: docker push uha26/ci-cd-demo-app
 
       - name: Cleanup
         run: |
