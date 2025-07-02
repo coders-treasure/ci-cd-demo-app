@@ -15,11 +15,22 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
       - name: Build Docker Image
-        run: docker build -t flask-ci-demo .
+        run: docker build -t coders-treasure/flask-ci-demo .
 
       - name: Run Container and Test Port
         run: |
-          docker run -d -p 5000:5000 --name test-container flask-ci-demo
+          docker run -d -p 5000:5000 --name test-container coders-treasure/flask-ci-demo
           sleep 5
           curl --fail http://localhost:5000
+
+      - name: Push Docker Image to Docker Hub
+        run: docker push coders-treasure/flask-ci-demo
+
+      - name: Cleanup
+        run: |
+          docker stop test-container
+          docker rm test-container
